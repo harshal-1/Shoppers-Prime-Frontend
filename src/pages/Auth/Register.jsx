@@ -37,6 +37,13 @@ const Register = () => {
     } else {
       try {
         const res = await register({ username, email, password }).unwrap();
+        const setCookie = (name, value, days) => {
+          const expirationDate = new Date();
+          expirationDate.setDate(expirationDate.getDate() + days);
+          document.cookie = `${name}=${value}; expires=${expirationDate.toUTCString()}; path=/`;
+        };
+    
+        setCookie("jwt", res.token, 30);
         dispatch(setCredentials({ ...res }));
         navigate(redirect);
         toast.success("User successfully registered");
